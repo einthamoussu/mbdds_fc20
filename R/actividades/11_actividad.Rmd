@@ -17,6 +17,7 @@ When you click the **Knit** button a document will be generated that includes bo
 
 ```{r cars}
 # Utiliza el comando summary para mostrar un resumen general de cars
+summary(cars)
 
 ```
 
@@ -26,6 +27,7 @@ You can also embed plots, for example:
 
 ```{r pressure, echo=FALSE}
 # Utiliza el comando plot para visualizar pressure en un gráfico
+plot(pressure)
 
 ```
 
