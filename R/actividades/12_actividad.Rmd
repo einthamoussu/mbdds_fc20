@@ -1,5 +1,5 @@
 ---
-title: "< PON UN TITULO >"
+title: "Esperanza de vida y PIB per cápita - 2007"
 output: html_document
 ---
 
@@ -18,25 +18,35 @@ paises07_2VAR <- paises %>%
 # función describir
 #  UTILIZA EL MISMO EJEMPLO DE DESCRIBIR DEL MODULO PARA CREAR UN GRAFICO DE PUNTOS ROJOS A PARTIR DE data
 #  HAZ QUE LA FUNCION DEVUELVA el summary de DATA 
+describir <- function(data, type, col = 'red', ...) {
+  plot(data, type = type, col = col, ...)
+  return(summary(data))
+}
+
+
 
 ```
 
 ## GRÁFICO DE DISPERSIÓN DE PAÍSES
 
-```{r, fig.cap="Fuente: Elaboración propia con datos de Gapminder", fig.align="center", message=FALSE}
+```{r, fig.cap="Fuente: Elaboración propia con datos de Gapminder", fig.align="center", message=FALSE, echo = FALSE}
 
 # utiliza la palabra "resumen" para asignar a la función describir creada anteriormente para los datos de paises07_2VAR 
 # añade en la función un tipo, un titulo al grafico y también ponle un titulo a los ejes
 # nota: añade el concepto en la función de cex.main=1
 
+resumen <- describir(paises07_2VAR, type = 'p', main = "Dispersión", xlab = "PIB per cápita", ylab = "Esperanza de vida", cex.main = 1)
+
+
 ```
 
-< DESCRIBE BREVEMENTE LO QUE OBSERVAS >
+Se pueden apreciar al menos tres cosas. Para PIB per cápita muy bajos, la esperanza de vida también es muy baja. En segundo lugar, en la medida en que el PIB per cápita crece, la esperanza de vida se posiciona rápidamente en edades que van entre 70 y 80 años. Y en tercer lugar, conforme el PIB sigue aumentando, la esperanza de vida ya no crece tanto y se mantiene en valores cercanos a los 80 años.
 
 ## TABLA DESCRIPTIVA DE PAÍSES 
 
 ```{r}
 # utiliza el comando kable para "resumen" y añade un titulo 
+kable(resumen)
 
 ```
 
