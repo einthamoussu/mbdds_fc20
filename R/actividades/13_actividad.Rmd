@@ -9,24 +9,40 @@ library(datos)
 suppressPackageStartupMessages(library(tidyverse))
 knitr::opts_chunk$set(echo = TRUE)
 
+paises_3VAR <- paises %>% 
+  select(anio, pib_per_capita, esperanza_de_vida)
+
 # funcion describir
 # CREA UNA FUNCIÓN describir QUE DEVUELVA EL summary DEL DATA
 # UTILIZA EL ggplot, para visualizar la población frente a la esperanza de vida, separando cada gráfico por el año desde 1952 hasta 2007
 # ACUERDATE DE AÑADIR TITULOS Y UNA LEYENDA PARA UNA MEJOR INTERPRETACIÓN
 
+describir <- function(data, ...) {
+  p1 <- ggplot(data, mapping = aes(x = pib_per_capita, y = esperanza_de_vida, color = pib_per_capita)) + 
+    geom_point() +
+    facet_wrap(vars(anio)) + 
+    theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust=1)) + 
+    labs(x = "PIB per capita (USD)", y = "Esperanza de vida (años)",
+         title ="Evolucion del PIB y la esperanza de vida desde el año 1952")
+  print(p1)
+  return(summary(data))
+}
+
 ```
 
 ## 1.1. GRÁFICO DE DISPERSIÓN DE PAÍSES
 
-```{r}
+```{r, echo=FALSE}
 # CREA UN GRAFICO DE DISPERSION USANDO LA FUNCIÓN DE DESCRIBIR GENERADA ANTERIOMENTE
+resumen <- describir(paises_3VAR)
 
 ```
 
 ## 1.2. TABLA DESCRIPTIVA DE PAÍSES 
 
-```{r}
+```{r, echo=FALSE}
 # GENERA LA TABLA DESCRIPTIVA, NO TE OLVIDES DE PONERLE UN TITULO
+kable(resumen, caption = "Resumen de PIB vs Esperanza de vida")
 
 ```
 
