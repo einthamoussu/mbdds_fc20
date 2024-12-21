@@ -35,19 +35,35 @@ describir <- function(data, type, col = 'red', ...) {
 # añade en la función un tipo, un titulo al grafico y también ponle un titulo a los ejes
 # nota: añade el concepto en la función de cex.main=1
 
-resumen <- describir(paises07_2VAR, type = 'p', main = "Dispersión", xlab = "PIB per cápita", ylab = "Esperanza de vida", cex.main = 1)
+resumen <- describir(paises07_2VAR
+                     , type = 'p'
+                     , main = "Dispersión"
+                     , xlab = "PIB per cápita"
+                     , ylab = "Esperanza de vida"
+                     , cex.main = 1)
 
 
 ```
 
-Se pueden apreciar al menos tres cosas. Para PIB per cápita muy bajos, la esperanza de vida también es muy baja. En segundo lugar, en la medida en que el PIB per cápita crece, la esperanza de vida se posiciona rápidamente en edades que van entre 70 y 80 años. Y en tercer lugar, conforme el PIB sigue aumentando, la esperanza de vida ya no crece tanto y se mantiene en valores cercanos a los 80 años.
+Se pueden apreciar al menos tres cosas. 
+
+- Para PIB per cápita muy bajos, la esperanza de vida también es muy baja. 
+- En segundo lugar, en la medida en que el PIB per cápita crece, la esperanza de vida se posiciona rápidamente en edades que van entre 70 y 80 años. 
+- Y en tercer lugar, conforme el PIB sigue aumentando, la esperanza de vida ya no crece tanto y se mantiene en valores cercanos a los 80 años.
+
 
 ## TABLA DESCRIPTIVA DE PAÍSES 
 
-```{r}
+```{r, echo=FALSE}
 # utiliza el comando kable para "resumen" y añade un titulo 
-kable(resumen)
+kable(resumen, captio = 'Tabla resumen')
 
 ```
 
-< DESCRIBE BREVEMENTE LO QUE OBSERVAS >
+
+Observaciones:
+
+- El país con PIB más grande es `r round(49357/277)` veces mayor que el país con PIB más pequeño.
+- EL promedio de PIB es el doble de la mediana del PIB, habla de que hay pocos países con muchísimo PIB, en tanto que muchos países tiene un PIB más bajo.
+- El primer cuartil tiene un PIB 10 veces menor que el cuartil mayor.
+- En cuanto a la esperanza de vida, no hay tanta desigualdad, la mediana y la media están más cercanas.
