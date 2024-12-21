@@ -1,0 +1,199 @@
+---
+title: 'MÓDULO 1: HERRAMIENTAS BIG DATA'
+author: "Emilio Inthamoussu"
+date: "2024-12-21"
+output:
+  word_document:
+subtitle: 'HERRAMIENTAS DE ANALISIS: PROGRAMACIÓN EN R - MICROACTIVIDADES'
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(knitr)
+library(pander)
+library(kableExtra)
+options(knitr.kable.NA = '')
+```
+
+# EJERCICIO 1
+
+Para el ejercicio 1, utilizaremos los datos los datos `millas` que hay el package `datos`. Estos datos consisten en 238 filas y 11 columnas que describen el consumo de combustible de 38 modelos de coche populares.
+
+Puedes consultar más sobre los datos en la ayuda: `?millas`.
+
+```{r, echo=FALSE, warning=FALSE}
+library(datos)
+suppressPackageStartupMessages(library(tidyverse))
+```
+
+```
+?millas
+```
+
+## EJERCICIO 1.1.
+
+A partir de los datos de **millas**, dibuja un gráfico de dispersión de puntos que muestre las millas recorridas en autopista por galón de combustible consumido (**autopista**) respecto a la **cilindrada** del motor de cada automóvil. No olvides añadir títulos al gráfico y a los ejes x e y.
+
+
+```{r, echo=FALSE}
+
+ggplot(millas, mapping = aes(x = cilindros, y = autopista)) + 
+  geom_point() +
+  labs(x = "Cilindros", y = "Millas por galon de combustible en autopista"
+       , title ="Comparacion de Consumo en autopista VS cantidad de cilindros")
+
+
+```
+
+## EJERCICIO 1.2.
+
+A partir del gráfico del ejercicio 1.1., escoge una columna para cada uno de los siguientes parámetros estéticos: `color`, `size` y `shape`.
+
+> Truco: Observa que puedes seleccionar tanto columnas numéricas como de tipo carácter o factor. Si lo crees interesante, puedes utilizar la misma columna para distintos parámetros del gráfico .
+
+Comenta algún aspecto relevante que hayas descubierto sobre los coches a partir del gráfico.
+
+```{r, echo=FALSE}
+ggplot(millas, mapping = aes(x = cilindros, y = autopista, size = autopista, color = cilindros, shape = factor(cilindros))) + 
+  scale_colour_gradient(low = "green",high = "red") + 
+  scale_shape_manual(values = c(15:24)) +
+  geom_point() +
+  labs(x = "Cilindros", y = "Millas por galon de combustible en autopista"
+       , title ="Comparacion de Consumo en autopista VS cantidad de cilindros")
+
+# se usa scale_colour_gradient para elegir la gama de colores
+# se usa scale_shape_manual para usar las shapes finales, porque si dejo por defecto elige la shape "+" que no queda bien 
+#   en esta grafica
+
+```
+
+Se observa, como se esperaba, que en la medida en que los vehículos tienen más cilindros, el consumo de combustible aumenta. Aunque también se da el caso de algunos vehículos con 4 cilindros que consumen más que algunos de 8.
+
+## EJERCICIO 1.3.
+
+Transforma el siguiente vector de tipo `factor` a tipo `numeric` de forma que el valor final mostrado sea exactamente el mismo en ambos vectores, pero con formato distinto. Para ello utiliza `as.character()` y `as.numeric()`. 
+
+¿Qué sucede si sólo utilizas `as.numeric()` directamente sobre la columna factor?
+
+
+```{r}
+vec <- factor(c("8","5","9","8","1","7"))
+print(vec) # valor mostrado
+
+# Solución:
+as.numeric(as.character(vec))
+
+```
+
+Si se utiliza directamente "as.numeric(vec)" se imprime en pantalla los ID asignados a cada valor del factor. Por ejemplo "`r as.numeric(vec)`". El valor "4" que aparece en primer lugar refiere al id 4 del factor, que tiene valor "8". El 2 que viene a continuación referie al id 2 del factor, que tiene valor "5"
+
+## EJERCICIO 1.4.
+
+Es millas un objeto de la clase *data.frame* o *matrix*?
+
+Millas es un objeto de la clase *data.frame*. Se puede corroborar ejecutando "class(millas)":
+
+```{r}
+`r class(millas)`
+```
+
+¿Y el siguiente objeto `obj`?
+
+```{r}
+
+obj <- cbind(millas$cilindrada,millas$cilindros)
+
+# solución
+class(obj)
+
+```
+"obj" es de la clase "matrix".
+
+## EJERCICIO 1.5.
+
+Crea una función que tome un vector de tipo integer como input y retorne un objeto de tipo lista que contega los siguientes 4 elementos:
+
+1. El último valor del vector
+1. Los elementos de las posiciones impares.
+1. Todos los elementos excepto el primero.
+1. Solo números impares (y no valores faltantes).
+
+```{r}
+# solución
+func_ej1_5 <- function(data) {
+
+  if(class(vec) == "integer" ) {
+    
+    ultimo <- tail(data,1)
+    posiciones_impares <- data[which(seq(1:length(data))%%2 != 0)]
+    sin_el_primero <- data[2:length(data)]
+    posiciones_impares_sinNA <- posiciones_impares
+    posiciones_impares_sinNA <- posiciones_impares_sinNA[which(!is.na(posiciones_impares))]
+    
+    return(list(ultimo,posiciones_impares,sin_el_primero,posiciones_impares_sinNA))
+  }
+  else{
+    print("Valor ingresado no es un integer")
+  }
+  
+  
+}
+
+FALTA indicar 2 ejemplos, uno que funcione bien y uno que no sea integer para que la funcion avise que se ingreso mal el argumento.
+
+```
+
+## EJERCICIO 1.6.
+
+Busca un ejemplo de objeto x en el que la expresión `x[-which(x > 0)]` no devuelve el mismo resultado que `x[x <= 0]`
+
+```{r}
+# Solución:
+
+```
+
+## EJERCICIO 1.7.
+
+Añade a millas una nueva columna llamada "fabr_mod" que contenga la concatenación del nombre del fabricante, un guion "-" y el modelo del coche. Presenta la nueva columna mediante la función head().
+
+```{r}
+# Solución:
+
+```
+
+## EJERCICIO 1.8.
+
+Selecciona todos los coches de `millas` que cumplan con todas todas las condiciones siguientes:
+
+- La marca es distinta a "dodge"
+- Tiene tracción en las cuatro puertas
+- Han estado fabricados antes del 2008
+- Las millas/galón, o bién en ciudad, o bién en carretera, no llegan a 12 millas/galón.
+
+¿Cuantos coches has encontrado?
+
+```{r}
+# Solución:
+
+```
+
+## EJERCICIO 1.9.
+
+Añade una nueva columna "vol_por_cil" a `obj` del ejercicio 1.4. que contenga el ratio de la cilindrada sobre el número de cilindros. Presenta el summary de la nueva columna.
+
+```{r}
+# Solución:
+
+```
+
+## EJERCICIO 1.10.
+
+Modifica los valores de la columna "vol_por_cil" del objeto `obj` del ejercicio 1.9. asignando NA a los valores de esta columna que sean superiores a 0.7.
+
+Presenta los datos con un summary del nuevo objeto `obj`. ¿Cuántos valores NA se han creado en esta columna? 
+
+```{r}
+# Solución:
+
+```
+
