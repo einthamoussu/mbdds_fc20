@@ -83,3 +83,38 @@ func_ej1_5 <- function(data) {
 
 resultado <- func_ej1_5(vec)
 resultado
+
+x <- c(1,2,-3,4,5,6,7,8,NA,9,10, 0.01, -0.1)
+x <- as.data.frame(x)
+class(x)
+x
+x <- c("a","b","c","d","e","f","g","-8",NA)
+x[-which(x > 0)]
+x[x <= 0]
+
+millas2 <- millas
+
+millas2$fabr_mod <- paste(millas2$fabricante,millas2$modelo,sep = "-")
+head(millas2)
+
+#- La marca es distinta a "dodge"
+#- Tiene tracción en las cuatro puertas
+#- Han estado fabricados antes del 2008
+#- Las millas/galón, o bién en ciudad, o bién en carretera, no llegan a 12 millas/galón.
+
+
+millas2[(millas2$fabricante != "dodge" & 
+           millas2$traccion == "4" &
+           millas2$anio < 2008 &
+           (millas2$ciudad < 12 | millas2$autopista <12)),]
+
+
+obj <- cbind(millas$cilindrada,millas$cilindros)
+
+obj <- as.data.frame(obj)
+names(obj) <- c("cilindrada","cilndros")
+obj$vol_por_cil <- obj$cilindrada/obj$cilndros
+
+summary(obj$vol_por_cil)
+
+obj$vol_por_cil[obj$vol_por_cil > 0.7] <- NA
