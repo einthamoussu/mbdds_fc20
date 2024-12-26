@@ -18,10 +18,12 @@ paises_informe$continente[paises_informe$continente=="Oceanía"] <- "Asia"
 paises_informe$continente <- factor(paises_informe$continente)
 
 # Paleta de colores
-< CREA UN VECTOR LLAMADO colores_continente QUE CONTENGA LOS COLORES DE LOS CONTINENTES COM VALORES Y NOMO ETIQUETAS O "names" EL NOMBRE DE LOS CONTINENTES  SEGUN SE ESPECIFICA EN LA ACTIVIDAD 1.4 >
+continentes <- levels(paises_informe$continente)
+colores <- c("blue","green","red","yellow")
+colores_continente <- cbind(colores,continentes)
 
 # Etiquetas
-< CREA UN VECTOR LLAMADO etiquetas_paises QUE CONTENGA LOS NOMBRES DE LOS PAÍSES >
+etiquetas_paises <- c("España","China","Etiopía","Canadá")
 
 # funcion describir
 describir <- function(data, colores, etiquetas) {
@@ -30,42 +32,42 @@ describir <- function(data, colores, etiquetas) {
   data_etiquetas <- data[data$pais %in% etiquetas, ]
   
   # Agrega continentes
-  < CALCULA CON FUNCIONES DPLYR LOS SIGUIENTES AGREGADOS POR CONTINENTE Y AÑO:
-  -  n_paises: Número de paises
-  - esperanza_de_vida: Esperanza de vida media
-  - pib_per_capita: PIB PER CÁPITA MEDIO
-  - poblacion: SUMA DEL TOTAL DE POBLACION
-  >
+  data_continente <- data %>% 
+    group_by(continente,anio) %>% 
+    summarize(n_paises = n(), 
+            esperanza_de_vida = mean(esperanza_de_vida),
+            pib_per_capita = mean(pib_per_capita),
+            poblacion = sum(poblacion))
 
   resultados <- list()
   
   resultados[["pib_per_capita"]] <- 
     ggplot(data, aes(x=anio, y=pib_per_capita, group=anio)) +
-    < INSERTA EL geom_boxplot > +
-    < TRANSFORMA LA ESCALA DEL EJE Y PARA QUE TENGA UNA ESCALA LOGARITMICA EN BASE 10 >
+    geom_boxplot() +
+    scale_x_log10()
   
   resultados[["esperanza_de_vida"]] <- 
     ggplot(data, aes(x=anio, y=esperanza_de_vida, group=anio)) +
-    < INSERTA EL geom_boxplot >
+    geom_boxplot()
   
   resultados[["paises"]] <- ggplot(data, aes(x=pib_per_capita, y=esperanza_de_vida
       , color=continente, size=poblacion)) +
-    < INSERTA EL geom_boxplot > +
-    < TRANSFORMA LA ESCALA DEL EJE X PARA QUE TENGA UNA ESCALA LOGARITMICA EN BASE 10 > +
+    geom_point() +
+    scale_x_log10() +
     scale_colour_manual(values = colores) +
     geom_label_repel(data=data_etiquetas
       , mapping=aes(x=pib_per_capita, y=esperanza_de_vida, label=pais)
       , size=3, color="black") +
-    < PON UN TITULOS AL GRAFICO, AL EJE X Y AL EJE Y > +
+    labs(x = "PIB per cápita", y = "Esperanza de vida", title ="Esperanza de vida según PIB en cada año") +
     facet_wrap(~anio)
   
   resultados[["continentes"]] <- ggplot(data_continente, aes(x=pib_per_capita, y=esperanza_de_vida
       , color=continente)) +
-    < INSERTA EL geom_path > +
-    < TRANSFORMA LA ESCALA DEL EJE X PARA QUE TENGA UNA ESCALA LOGARITMICA EN BASE 10 > +
+    geom_path() +
+    scale_x_log10() +
     scale_colour_manual(values = colores) +
     geom_text_repel(aes(label=anio), size=2, color="black") +
-    < PON UN TITULOS AL GRAFICO, AL EJE X Y AL EJE Y >
+    labs(x = "PIB per cápita", y = "Esperanza de vida", title ="Esperanza de vida según PIB en cada año") 
   
   resultados[["summary"]] <- summary(data[,c("anio","continente","esperanza_de_vida","pib_per_capita")])
   
@@ -81,13 +83,13 @@ resumen <- describir(paises_informe, colores_continente, etiquetas_paises)
 resumen[["pib_per_capita"]]
 ```
 
-<AÑADE UN BREVE COMENTARIO DE LOS RESULTADOS>
+Se nota que en la decada del 1950, el PIB per capita estaba concentrado en un valor bajo para la mayoría de los países, encontrándose algunas excepciones que estaban por encima o muy por encima del resto. Con el paso de los años los ingresos fueron aumentando en muchos países, notándose esto en que el boxplot es más alto. Igualmente se nota que la media está mas cercana al límite inferior de la vela, por lo que muchos países siguen teniendo un PIB per cápita bajo.
 
 ```{r, echo=FALSE, fig.width=11, fig.height=2, fig.cap="Boxplot Esperanza de vida (Continente y año)", fig.align="center",message=FALSE}
 resumen[["esperanza_de_vida"]]
 ```
 
-<AÑADE UN BREVE COMENTARIO DE LOS RESULTADOS>
+Hay un claro aumento de la esperanza de vida en el correr de los años. Incluso la media, pasó de estar en a parte inferior de la vela a estar en la parte superior de la misma.
 
 
 ## 1.5.2. GRÁFICO DE DISPERSIÓN DE PAÍSES
@@ -100,13 +102,15 @@ resumen[["paises"]]
 
 ## 1.5.3. EVOLUCIÓN DE LOS CONTINENTES
 
-```{}
+```{r echo=FALSE, fig.width=11,fig.height=8, fig.cap="Evolución de PIB por contiente y por año (Fuente: Elaboración propia con datos de Gapminder)", fig.align="center",message=FALSE, dpi=150}
 # CREA UN GRAFICO DE LINEA QUE REPRESENTE LA EVOLUCIÓN PARA LOS "continentes"
+resumen$continentes
 
 ```
 
 ## 1.5.4. TABLA DESCRIPTIVA DE PAÍSES 
 
-```{}
+```{r , echo=FALSE}
 # GENERA LA TABLA DESCRIPTIVA, NO TE OLVIDES DE PONERLE UN TITULO
+kable(resumen$summary, caption = "Cuadro resumen")
 ```
