@@ -18,62 +18,70 @@ paises_informe$continente[paises_informe$continente=="Oceanía"] <- "Asia"
 paises_informe$continente <- factor(paises_informe$continente)
 
 # Paleta de colores
-< CREA UN VECTOR LLAMADO colores_continente QUE CONTENGA LOS COLORES DE LOS CONTINENTES COM VALORES Y NOMO ETIQUETAS O "names" EL NOMBRE DE LOS CONTINENTES  SEGUN SE ESPECIFICA EN LA ACTIVIDAD 1.4 >
+#< CREA UN VECTOR LLAMADO colores_continente QUE CONTENGA LOS COLORES DE LOS CONTINENTES COM VALORES Y NOMO ETIQUETAS O "names" EL NOMBRE DE #LOS CONTINENTES  SEGUN SE ESPECIFICA EN LA ACTIVIDAD 1.4 >
+continentes <- levels(paises_informe$continente)
+colores <- c("blue","green","red","yellow")
+colores_continente <- cbind(colores,continentes)
+
 
 # Etiquetas
-< CREA UN VECTOR LLAMADO etiquetas_paises QUE CONTENGA LOS NOMBRES DE LOS PAÍSES >
+#< CREA UN VECTOR LLAMADO etiquetas_paises QUE CONTENGA LOS NOMBRES DE LOS PAÍSES >
+etiquetas_paises <- c("España","China","Etiopía","Canadá")
 
 # funcion describir
 describir <- function(data, colores, etiquetas) {
   
   # filtra paises con etiqueta
   data_etiquetas <- data[data$pais %in% etiquetas, ]
-  
+    
   resultados <- list()
-
+    
   resultados[["pib_per_capita"]] <- 
     ggplot(data, aes(x=anio, y=pib_per_capita, group=anio)) +
-    < INSERTA EL geom_boxplot > +
-    < TRANSFORMA LA ESCALA DEL EJE Y PARA QUE TENGA UNA ESCALA LOGARITMICA EN BASE 10 >
-
+    geom_boxplot() +
+    scale_x_log10()
+      
   resultados[["esperanza_de_vida"]] <- 
     ggplot(data, aes(x=anio, y=esperanza_de_vida, group=anio)) +
-    < INSERTA EL geom_boxplot > +
-
+    geom_boxplot()
+      
   resultados[["dispersion"]] <- ggplot(data, aes(x=pib_per_capita, y=esperanza_de_vida
-      , color=continente, size=poblacion)) +
-    < INSERTA EL GEOM DE PUNTOS > +
-    < TRANSFORMA LA ESCALA DEL EJE X PARA QUE TENGA UNA ESCALA LOGARITMICA EN BASE 10 >
+                                                     , color=continente, size=poblacion)) +
+    geom_point() +
+    scale_x_log10() +
     scale_colour_manual(values = colores) +
     geom_label(data=data_etiquetas
-      , mapping=aes(x=pib_per_capita, y=esperanza_de_vida, label=pais)
-      , size=3, color="black") +
-    < PON UN TITULOS AL GRAFICO, AL EJE X Y AL EJE Y > +
-    facet_wrap(~anio)
-
-  resultados[["summary"]] <- summary(data[,c("anio","continente","esperanza_de_vida","pib_per_capita")])
-  
-  return(resultados)
+       , mapping=aes(x=pib_per_capita, y=esperanza_de_vida, label=pais)
+       , size=3, color="black") +
+    labs(x = "PIB per cápita", y = "Esperanza de vida", title ="Esperanza de vida según PIB en cada año") +
+      facet_wrap(~anio)
+    
+    resultados[["summary"]] <- summary(data[,c("anio","continente","esperanza_de_vida","pib_per_capita")])
+    
+    return(resultados)
 }
 
-resumen <-  < LLAMA A LA FUNCION describir SOBRE LOS DATOS DE paises_informe ESPCIFICANDO LOS COLORES DE  colores_continente Y LAS QETIQUETAS DEFINIDAS EN etiquetas_paises >
+resumen <-  describir(paises_informe,colores_continente[,1],etiquetas_paises)
 ```
 
 ## 1.4.1. DESCRIPTIVO BOXPLOT
 
-```{}
+```{r, echo=FALSE}
 # CREA UN GRAFICO DE BOX-PLOT PARA "pib_per_capita"
+resumen$pib_per_capita
 
 ```
 
-```{}
+```{r, echo=FALSE}
 # CREA UN GRAFICO DE BOX-PLOT PARA "esperanza_de_vida"
+resumen$esperanza_de_vida
 
 ```
 
 ## 1.4.2. GRÁFICO DE DISPERSIÓN DE PAÍSES
 
-```{}
+```{r, echo=FALSE}
 # CREA UN GRAFICO DE DISPERSION USANDO LA FUNCIÓN DE DESCRIBIR GENERADA ANTERIOMENTE PARA "dispersion"
+resumen$dispersion
 ```
 
