@@ -1,5 +1,5 @@
 ---
-title: 'MÓDULO 1: HERRAMIENTAS BIG DATA'
+title: 'MÓDULO 1: HERRAMIENTAS BIG DATA '
 author: "Emilio Inthamoussu"
 date: "2024-12-21"
 output:
